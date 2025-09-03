@@ -1,5 +1,5 @@
 name: classtab_catalog
-description: Un'applicazione Flutter per catalogare e visualizzare tablature di chitarra classica da classtab.org
+description: A Flutter application for cataloging and viewing classical guitar tablatures from classtab.org
 
 publish_to: 'none'
 
@@ -48,6 +48,9 @@ dependencies:
   
   # URL launcher
   url_launcher: ^6.2.1
+  
+  # YouTube player
+  youtube_player_flutter: ^9.0.1
 
 dev_dependencies:
   flutter_test:

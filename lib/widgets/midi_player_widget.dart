@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:classtab_catalog/providers/midi_provider.dart';
+import 'package:classtab_catalog/providers/youtube_provider.dart';
+import 'package:classtab_catalog/models/tablature.dart';
 
 class MidiPlayerWidget extends StatelessWidget {
   final String midiUrl;
+  final Tablature? tablature;
 
   const MidiPlayerWidget({
     super.key,
     required this.midiUrl,
+    this.tablature,
   });
 
   @override
@@ -15,7 +19,7 @@ class MidiPlayerWidget extends StatelessWidget {
     return Consumer<MidiProvider>(
       builder: (context, midiProvider, child) {
         final isCurrentTrack = midiProvider.currentMidiUrl == midiUrl;
-        
+
         return Container(
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.all(16),
@@ -48,6 +52,27 @@ class MidiPlayerWidget extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
+
+                  // Bottone YouTube (se tablatura disponibile)
+                  if (tablature != null)
+                    Consumer<YouTubeProvider>(
+                      builder: (context, youtubeProvider, child) {
+                        return IconButton(
+                          icon: Icon(
+                            Icons.play_circle_outline,
+                            color: youtubeProvider.hasVideo(tablature!)
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                          onPressed: youtubeProvider.isLoading
+                              ? null
+                              : () =>
+                                  youtubeProvider.openYouTubePlayer(tablature!),
+                          tooltip: 'Apri video YouTube',
+                        );
+                      },
+                    ),
+
                   if (midiProvider.isLoading && isCurrentTrack)
                     const SizedBox(
                       width: 20,
@@ -56,9 +81,9 @@ class MidiPlayerWidget extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Controlli di riproduzione
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -68,25 +93,27 @@ class MidiPlayerWidget extends StatelessWidget {
                     iconSize: 48,
                     onPressed: midiProvider.isLoading
                         ? null
-                        : () => _handlePlayPause(context, midiProvider, isCurrentTrack),
+                        : () => _handlePlayPause(
+                            context, midiProvider, isCurrentTrack),
                     icon: Icon(
                       _getPlayButtonIcon(midiProvider, isCurrentTrack),
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  
+
                   const SizedBox(width: 16),
-                  
+
                   // Pulsante stop
                   IconButton(
-                    onPressed: (isCurrentTrack && !midiProvider.state.name.contains('stopped'))
+                    onPressed: (isCurrentTrack &&
+                            !midiProvider.state.name.contains('stopped'))
                         ? () => midiProvider.stopMidi()
                         : null,
                     icon: const Icon(Icons.stop),
                   ),
-                  
+
                   const SizedBox(width: 16),
-                  
+
                   // Pulsante loop
                   IconButton(
                     onPressed: () => midiProvider.toggleLoop(),
@@ -99,19 +126,19 @@ class MidiPlayerWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Barra di progresso
               if (isCurrentTrack && midiProvider.duration > 0) ...[
                 const SizedBox(height: 16),
                 _buildProgressBar(midiProvider),
               ],
-              
+
               // Controlli volume e tempo
               if (isCurrentTrack) ...[
                 const SizedBox(height: 16),
                 _buildVolumeAndTempoControls(midiProvider),
               ],
-              
+
               // Messaggio di errore
               if (midiProvider.errorMessage.isNotEmpty && isCurrentTrack) ...[
                 const SizedBox(height: 8),
@@ -123,7 +150,8 @@ class MidiPlayerWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 16),
+                      const Icon(Icons.error_outline,
+                          color: Colors.red, size: 16),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -149,7 +177,7 @@ class MidiPlayerWidget extends StatelessWidget {
     if (!isCurrentTrack || midiProvider.state == MidiPlayerState.stopped) {
       return Icons.play_circle_filled;
     }
-    
+
     switch (midiProvider.state) {
       case MidiPlayerState.playing:
         return Icons.pause_circle_filled;
@@ -164,7 +192,8 @@ class MidiPlayerWidget extends StatelessWidget {
     }
   }
 
-  void _handlePlayPause(BuildContext context, MidiProvider midiProvider, bool isCurrentTrack) {
+  void _handlePlayPause(
+      BuildContext context, MidiProvider midiProvider, bool isCurrentTrack) {
     if (!isCurrentTrack || midiProvider.state == MidiPlayerState.stopped) {
       midiProvider.playMidi(midiUrl);
     } else if (midiProvider.state == MidiPlayerState.playing) {
@@ -184,16 +213,16 @@ class MidiPlayerWidget extends StatelessWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
               trackHeight: 4,
             ),
-          child: Slider(
-            value: midiProvider.position.clamp(0.0, midiProvider.duration),
-            max: midiProvider.duration,
-            onChanged: (value) {
-              midiProvider.seekTo(value);
-            },
+            child: Slider(
+              value: midiProvider.position.clamp(0.0, midiProvider.duration),
+              max: midiProvider.duration,
+              onChanged: (value) {
+                midiProvider.seekTo(value);
+              },
+            ),
           ),
         ),
-        ),
-        
+
         // Tempi
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -228,24 +257,25 @@ class MidiPlayerWidget extends StatelessWidget {
                 child: Builder(
                   builder: (context) => SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 4),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 4),
                       trackHeight: 2,
                     ),
-                  child: Slider(
-                    value: midiProvider.volume,
-                    onChanged: (value) {
-                      midiProvider.setVolume(value);
-                    },
+                    child: Slider(
+                      value: midiProvider.volume,
+                      onChanged: (value) {
+                        midiProvider.setVolume(value);
+                      },
+                    ),
                   ),
-                ),
                 ),
               ),
             ],
           ),
         ),
-        
+
         const SizedBox(width: 16),
-        
+
         // Controllo tempo
         Expanded(
           child: Row(
@@ -256,19 +286,20 @@ class MidiPlayerWidget extends StatelessWidget {
                 child: Builder(
                   builder: (context) => SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 4),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 4),
                       trackHeight: 2,
                     ),
-                  child: Slider(
-                    value: midiProvider.tempo,
-                    min: 0.5,
-                    max: 2.0,
-                    divisions: 15,
-                    onChanged: (value) {
-                      midiProvider.setTempo(value);
-                    },
+                    child: Slider(
+                      value: midiProvider.tempo,
+                      min: 0.5,
+                      max: 2.0,
+                      divisions: 15,
+                      onChanged: (value) {
+                        midiProvider.setTempo(value);
+                      },
+                    ),
                   ),
-                ),
                 ),
               ),
               Text(

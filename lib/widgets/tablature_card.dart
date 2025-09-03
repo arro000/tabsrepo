@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:classtab_catalog/models/tablature.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
 import 'package:classtab_catalog/providers/midi_provider.dart';
+import 'package:classtab_catalog/providers/youtube_provider.dart';
 import 'package:classtab_catalog/screens/tablature_detail_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -44,14 +45,15 @@ class TablatureCard extends StatelessWidget {
                       children: [
                         // Titolo
                         Text(
-                          _highlightText(tablature.displayTitle, highlightQuery),
+                          _highlightText(
+                              tablature.displayTitle, highlightQuery),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
-                        
+
                         // Compositore
                         Text(
                           _highlightText(tablature.composer, highlightQuery),
@@ -64,22 +66,42 @@ class TablatureCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Azioni
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // Pulsante YouTube
+                      Consumer<YouTubeProvider>(
+                        builder: (context, youtubeProvider, child) {
+                          return IconButton(
+                            icon: Icon(
+                              Icons.play_circle_outline,
+                              color: youtubeProvider.hasVideo(tablature)
+                                  ? Colors.red
+                                  : Colors.grey[400],
+                            ),
+                            onPressed: youtubeProvider.isLoading
+                                ? null
+                                : () => youtubeProvider
+                                    .openYouTubePlayer(tablature),
+                            tooltip: 'Apri video YouTube',
+                          );
+                        },
+                      ),
+
                       // Pulsante MIDI
                       if (tablature.hasMidi)
                         Consumer<MidiProvider>(
                           builder: (context, midiProvider, child) {
-                            final isCurrentlyPlaying = 
-                                midiProvider.currentMidiUrl == tablature.midiUrl &&
-                                midiProvider.isPlaying;
-                            
+                            final isCurrentlyPlaying =
+                                midiProvider.currentMidiUrl ==
+                                        tablature.midiUrl &&
+                                    midiProvider.isPlaying;
+
                             return IconButton(
                               icon: Icon(
-                                isCurrentlyPlaying 
+                                isCurrentlyPlaying
                                     ? Icons.pause_circle_filled
                                     : Icons.play_circle_filled,
                                 color: Theme.of(context).primaryColor,
@@ -89,15 +111,18 @@ class TablatureCard extends StatelessWidget {
                                       if (isCurrentlyPlaying) {
                                         midiProvider.pauseMidi();
                                       } else {
-                                        midiProvider.playMidi(tablature.midiUrl!);
+                                        midiProvider
+                                            .playMidi(tablature.midiUrl!);
                                       }
                                     }
                                   : null,
-                              tooltip: isCurrentlyPlaying ? 'Pausa' : 'Riproduci MIDI',
+                              tooltip: isCurrentlyPlaying
+                                  ? 'Pausa'
+                                  : 'Riproduci MIDI',
                             );
                           },
                         ),
-                      
+
                       // Pulsante preferiti
                       Consumer<TablatureProvider>(
                         builder: (context, provider, child) {
@@ -123,9 +148,9 @@ class TablatureCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Informazioni aggiuntive
               Wrap(
                 spacing: 8,
@@ -138,7 +163,7 @@ class TablatureCard extends StatelessWidget {
                       label: tablature.key!,
                       color: Colors.blue,
                     ),
-                  
+
                   // Difficoltà
                   if (tablature.difficulty != null)
                     _buildInfoChip(
@@ -146,9 +171,10 @@ class TablatureCard extends StatelessWidget {
                       label: tablature.difficultyDisplay,
                       color: _getDifficultyColor(tablature.difficulty!),
                     ),
-                  
+
                   // Features
-                  ...tablature.features.map((feature) => _buildFeatureChip(feature)),
+                  ...tablature.features
+                      .map((feature) => _buildFeatureChip(feature)),
                 ],
               ),
             ],
@@ -191,7 +217,7 @@ class TablatureCard extends StatelessWidget {
   Widget _buildFeatureChip(String feature) {
     IconData icon;
     Color color;
-    
+
     switch (feature) {
       case 'MIDI':
         icon = MdiIcons.musicNote;
@@ -209,7 +235,7 @@ class TablatureCard extends StatelessWidget {
         icon = Icons.info_outline;
         color = Colors.grey;
     }
-    
+
     return _buildInfoChip(icon: icon, label: feature, color: color);
   }
 

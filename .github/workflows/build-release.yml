@@ -1,0 +1,371 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build App Bundle
+        run: flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload App Bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Web
+        run: flutter build web --release --web-renderer html
+
+      - name: Archive Web build
+        run: |
+          cd build/web
+          tar -czf ../../web-build.tar.gz .
+
+      - name: Upload Web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: web-build.tar.gz
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Enable Linux desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Linux
+        run: flutter build linux --release
+
+      - name: Archive Linux build
+        run: |
+          cd build/linux/x64/release/bundle
+          tar -czf ../../../../../linux-build.tar.gz .
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: linux-build.tar.gz
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Create Windows platform
+        run: flutter create --platforms=windows .
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Archive Windows build
+        run: |
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath windows-build.zip
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: windows-build.zip
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Enable macOS desktop
+        run: flutter config --enable-macos-desktop
+
+      - name: Create macOS platform
+        run: flutter create --platforms=macos .
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build macOS
+        run: flutter build macos --release
+
+      - name: Archive macOS build
+        run: |
+          cd build/macos/Build/Products/Release
+          tar -czf ../../../../../macos-build.tar.gz *.app
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: macos-build.tar.gz
+
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+
+      - name: Create iOS platform
+        run: flutter create --platforms=ios .
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build iOS (no-codesign)
+        run: flutter build ios --release --no-codesign
+
+      - name: Archive iOS build
+        run: |
+          cd build/ios/iphoneos
+          tar -czf ../../../ios-build.tar.gz Runner.app
+
+      - name: Upload iOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ios-build.tar.gz
+
+  create-release:
+    name: Create Release
+    needs: [build-android, build-web, build-linux, build-windows, build-macos, build-ios]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Get version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          release_name: ClassTab Catalog ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## ClassTab Catalog ${{ steps.version.outputs.VERSION }}
+            
+            ### Downloads
+            - **Android APK**: For Android devices (sideloading)
+            - **Android AAB**: For Google Play Store
+            - **Web**: Web application build
+            - **Windows**: Windows desktop application
+            - **macOS**: macOS desktop application
+            - **Linux**: Linux desktop application
+            - **iOS**: iOS application (requires code signing)
+            
+            ### Installation Instructions
+            
+            #### Android
+            - Download the APK file and install it on your Android device
+            - Enable "Install from unknown sources" in your device settings
+            
+            #### Web
+            - Extract the web-build.tar.gz file
+            - Serve the contents using a web server
+            
+            #### Desktop (Windows/macOS/Linux)
+            - Extract the respective archive for your platform
+            - Run the executable file
+            
+            ### Features
+            - Browse over 3000 classical guitar tablatures
+            - Advanced search and filtering
+            - MIDI playback support
+            - Favorites management
+            - Offline support after initial sync
+            
+            ### System Requirements
+            - **Android**: Android 5.0 (API level 21) or higher
+            - **iOS**: iOS 12.0 or higher
+            - **Windows**: Windows 10 or higher
+            - **macOS**: macOS 10.14 or higher
+            - **Linux**: Ubuntu 18.04 or equivalent
+            
+            For support and bug reports, please visit our [GitHub Issues](https://github.com/your-username/classtab-catalog/issues) page.
+          draft: false
+          prerelease: false
+
+      - name: Upload Android APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./android-apk/app-release.apk
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-android.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload Android AAB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./android-aab/app-release.aab
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-android.aab
+          asset_content_type: application/octet-stream
+
+      - name: Upload Web Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./web-build/web-build.tar.gz
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-web.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Windows Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./windows-build/windows-build.zip
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-windows.zip
+          asset_content_type: application/zip
+
+      - name: Upload macOS Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./macos-build/macos-build.tar.gz
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-macos.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Linux Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./linux-build/linux-build.tar.gz
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-linux.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload iOS Build
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./ios-build/ios-build.tar.gz
+          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-ios.tar.gz
+          asset_content_type: application/gzip

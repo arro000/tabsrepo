@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
+import 'package:classtab_catalog/providers/youtube_provider.dart';
 import 'package:classtab_catalog/screens/search_screen.dart';
 import 'package:classtab_catalog/screens/favorites_screen.dart';
 import 'package:classtab_catalog/screens/composers_screen.dart';
 import 'package:classtab_catalog/screens/settings_screen.dart';
 import 'package:classtab_catalog/widgets/tablature_card.dart';
 import 'package:classtab_catalog/widgets/statistics_card.dart';
+import 'package:classtab_catalog/widgets/floating_youtube_player.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -61,13 +63,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
                     : const Icon(Icons.sync),
-                onPressed: provider.isLoading
-                    ? null
-                    : () => _showSyncDialog(context),
+                onPressed:
+                    provider.isLoading ? null : () => _showSyncDialog(context),
                 tooltip: 'Sincronizza con ClassTab.org',
               );
             },
@@ -83,18 +85,38 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        children: const [
-          _HomeTab(),
-          SearchScreen(),
-          ComposersScreen(),
-          FavoritesScreen(),
+      body: Stack(
+        children: [
+          // Contenuto principale
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            children: const [
+              _HomeTab(),
+              SearchScreen(),
+              ComposersScreen(),
+              FavoritesScreen(),
+            ],
+          ),
+
+          // Player YouTube fluttuante
+          Consumer<YouTubeProvider>(
+            builder: (context, youtubeProvider, child) {
+              if (youtubeProvider.isPlayerVisible &&
+                  youtubeProvider.currentVideoId != null) {
+                return FloatingYouTubePlayer(
+                  videoId: youtubeProvider.currentVideoId!,
+                  title: youtubeProvider.currentVideoTitle ?? 'Video YouTube',
+                  onClose: () => youtubeProvider.closeYouTubePlayer(),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -246,7 +268,7 @@ class _HomeTab extends StatelessWidget {
                   child: StatisticsCard(statistics: provider.getStatistics()),
                 ),
               ),
-              
+
               // Tablature recenti
               SliverToBoxAdapter(
                 child: Padding(
@@ -269,9 +291,9 @@ class _HomeTab extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SliverToBoxAdapter(child: SizedBox(height: 8)),
-              
+
               // Lista delle tablature
               SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -285,12 +307,12 @@ class _HomeTab extends StatelessWidget {
                       child: TablatureCard(tablature: tablature),
                     );
                   },
-                  childCount: provider.tablatures.length > 10 
-                      ? 10 
+                  childCount: provider.tablatures.length > 10
+                      ? 10
                       : provider.tablatures.length,
                 ),
               ),
-              
+
               // Pulsante "Vedi tutte"
               if (provider.tablatures.length > 10)
                 SliverToBoxAdapter(
@@ -310,7 +332,7 @@ class _HomeTab extends StatelessWidget {
                     ),
                   ),
                 ),
-              
+
               // Spazio finale
               const SliverToBoxAdapter(child: SizedBox(height: 16)),
             ],

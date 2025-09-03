@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:classtab_catalog/models/tablature.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
+import 'package:classtab_catalog/providers/youtube_provider.dart';
 
 import 'package:classtab_catalog/widgets/midi_player_widget.dart';
 import 'package:classtab_catalog/widgets/enhanced_tablature_viewer.dart';
+import 'package:classtab_catalog/widgets/floating_youtube_player.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,6 +67,24 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           overflow: TextOverflow.ellipsis,
         ),
         actions: [
+          // Pulsante YouTube
+          Consumer<YouTubeProvider>(
+            builder: (context, youtubeProvider, child) {
+              return IconButton(
+                icon: Icon(
+                  Icons.play_circle_outline,
+                  color: youtubeProvider.hasVideo(widget.tablature)
+                      ? Colors.red
+                      : Colors.grey,
+                ),
+                onPressed: youtubeProvider.isLoading
+                    ? null
+                    : () => youtubeProvider.openYouTubePlayer(widget.tablature),
+                tooltip: 'Apri video YouTube',
+              );
+            },
+          ),
+
           // Pulsante preferiti
           Consumer<TablatureProvider>(
             builder: (context, provider, child) {
@@ -123,18 +143,41 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          // Informazioni sulla tablatura
-          _buildTablatureInfo(),
+          // Contenuto principale
+          Column(
+            children: [
+              // Informazioni sulla tablatura
+              _buildTablatureInfo(),
 
-          // Player MIDI (se disponibile)
-          if (widget.tablature.hasMidi && widget.tablature.midiUrl != null)
-            MidiPlayerWidget(midiUrl: widget.tablature.midiUrl!),
+              // Player MIDI (se disponibile)
+              if (widget.tablature.hasMidi && widget.tablature.midiUrl != null)
+                MidiPlayerWidget(
+                  midiUrl: widget.tablature.midiUrl!,
+                  tablature: widget.tablature,
+                ),
 
-          // Contenuto della tablatura
-          Expanded(
-            child: _buildTablatureContent(),
+              // Contenuto della tablatura
+              Expanded(
+                child: _buildTablatureContent(),
+              ),
+            ],
+          ),
+
+          // Player YouTube fluttuante
+          Consumer<YouTubeProvider>(
+            builder: (context, youtubeProvider, child) {
+              if (youtubeProvider.isPlayerVisible &&
+                  youtubeProvider.currentVideoId != null) {
+                return FloatingYouTubePlayer(
+                  videoId: youtubeProvider.currentVideoId!,
+                  title: youtubeProvider.currentVideoTitle ?? 'Video YouTube',
+                  onClose: () => youtubeProvider.closeYouTubePlayer(),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ],
       ),
