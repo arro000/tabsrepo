@@ -4,6 +4,7 @@ import 'package:classtab_catalog/models/tablature.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
 
 import 'package:classtab_catalog/widgets/midi_player_widget.dart';
+import 'package:classtab_catalog/widgets/enhanced_tablature_viewer.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,7 +43,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
       final content = await context
           .read<TablatureProvider>()
           .getTablatureContent(widget.tablature);
-      
+
       setState(() {
         _tablatureContent = content;
         _isLoading = false;
@@ -80,7 +81,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
               );
             },
           ),
-          
+
           // Menu opzioni
           PopupMenuButton<String>(
             onSelected: _handleMenuAction,
@@ -105,23 +106,16 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
                   ],
                 ),
               ),
-              const PopupMenuItem(
-                value: 'font_size',
-                child: Row(
-                  children: [
-                    Icon(Icons.text_fields),
-                    SizedBox(width: 8),
-                    Text('Dimensione testo'),
-                  ],
-                ),
-              ),
               PopupMenuItem(
                 value: 'line_numbers',
                 child: Row(
                   children: [
-                    Icon(_showLineNumbers ? Icons.format_list_numbered : Icons.format_list_numbered_rtl),
+                    Icon(_showLineNumbers
+                        ? Icons.format_list_numbered
+                        : Icons.format_list_numbered_rtl),
                     const SizedBox(width: 8),
-                    Text(_showLineNumbers ? 'Nascondi numeri' : 'Mostra numeri'),
+                    Text(
+                        _showLineNumbers ? 'Nascondi numeri' : 'Mostra numeri'),
                   ],
                 ),
               ),
@@ -133,11 +127,11 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
         children: [
           // Informazioni sulla tablatura
           _buildTablatureInfo(),
-          
+
           // Player MIDI (se disponibile)
           if (widget.tablature.hasMidi && widget.tablature.midiUrl != null)
             MidiPlayerWidget(midiUrl: widget.tablature.midiUrl!),
-          
+
           // Contenuto della tablatura
           Expanded(
             child: _buildTablatureContent(),
@@ -173,9 +167,9 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Features e informazioni
           Wrap(
             spacing: 8,
@@ -187,16 +181,14 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
                   label: 'Tonalità: ${widget.tablature.key}',
                   color: Colors.blue,
                 ),
-              
               if (widget.tablature.difficulty != null)
                 _buildInfoChip(
                   icon: Icons.star_outline,
                   label: widget.tablature.difficultyDisplay,
                   color: _getDifficultyColor(widget.tablature.difficulty!),
                 ),
-              
-              ...widget.tablature.features.map((feature) => 
-                _buildFeatureChip(feature)),
+              ...widget.tablature.features
+                  .map((feature) => _buildFeatureChip(feature)),
             ],
           ),
         ],
@@ -272,66 +264,15 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
       );
     }
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: _showLineNumbers
-            ? _buildNumberedContent()
-            : _buildSimpleContent(),
-      ),
-    );
-  }
-
-  Widget _buildSimpleContent() {
-    return SelectableText(
-      _tablatureContent!,
-      style: TextStyle(
-        fontFamily: 'RobotoMono',
-        fontSize: _fontSize,
-        height: 1.4,
-      ),
-    );
-  }
-
-  Widget _buildNumberedContent() {
-    final lines = _tablatureContent!.split('\n');
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: lines.asMap().entries.map((entry) {
-        final lineNumber = entry.key + 1;
-        final line = entry.value;
-        
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 40,
-              padding: const EdgeInsets.only(right: 8),
-              child: Text(
-                '$lineNumber',
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: _fontSize - 2,
-                  color: Colors.grey[600],
-                ),
-                textAlign: TextAlign.right,
-              ),
-            ),
-            Expanded(
-              child: SelectableText(
-                line,
-                style: TextStyle(
-                  fontFamily: 'RobotoMono',
-                  fontSize: _fontSize,
-                  height: 1.4,
-                ),
-              ),
-            ),
-          ],
-        );
-      }).toList(),
+    return EnhancedTablatureViewer(
+      content: _tablatureContent!,
+      initialFontSize: _fontSize,
+      showLineNumbers: _showLineNumbers,
+      onFontSizeChanged: (newSize) {
+        setState(() {
+          _fontSize = newSize;
+        });
+      },
     );
   }
 
@@ -368,7 +309,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
   Widget _buildFeatureChip(String feature) {
     IconData icon;
     Color color;
-    
+
     switch (feature) {
       case 'MIDI':
         icon = MdiIcons.musicNote;
@@ -386,7 +327,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
         icon = Icons.info_outline;
         color = Colors.grey;
     }
-    
+
     return _buildInfoChip(icon: icon, label: feature, color: color);
   }
 
@@ -411,9 +352,6 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
       case 'open_web':
         _openInBrowser();
         break;
-      case 'font_size':
-        _showFontSizeDialog();
-        break;
       case 'line_numbers':
         setState(() {
           _showLineNumbers = !_showLineNumbers;
@@ -425,7 +363,8 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
   void _shareTablature() {
     // Implementa la condivisione
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Funzione di condivisione non ancora implementata')),
+      const SnackBar(
+          content: Text('Funzione di condivisione non ancora implementata')),
     );
   }
 
@@ -440,42 +379,5 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
         );
       }
     }
-  }
-
-  void _showFontSizeDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Dimensione testo'),
-        content: StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Dimensione: ${_fontSize.toInt()}px'),
-                Slider(
-                  value: _fontSize,
-                  min: 10.0,
-                  max: 24.0,
-                  divisions: 14,
-                  onChanged: (value) {
-                    setDialogState(() {
-                      _fontSize = value;
-                    });
-                    setState(() {});
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Chiudi'),
-          ),
-        ],
-      ),
-    );
   }
 }
