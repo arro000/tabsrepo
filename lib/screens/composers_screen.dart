@@ -72,7 +72,7 @@ class _ComposersScreenState extends State<ComposersScreen> {
                   color: Theme.of(context).cardColor,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -164,9 +164,7 @@ class _ComposersScreenState extends State<ComposersScreen> {
     // Raggruppa i compositori per lettera iniziale
     final groupedComposers = <String, List<String>>{};
     for (final composer in _filteredComposers) {
-      final firstLetter = composer.isNotEmpty 
-          ? composer[0].toUpperCase() 
-          : '#';
+      final firstLetter = composer.isNotEmpty ? composer[0].toUpperCase() : '#';
       groupedComposers.putIfAbsent(firstLetter, () => []).add(composer);
     }
 
@@ -197,7 +195,8 @@ class _ComposersScreenState extends State<ComposersScreen> {
             ),
 
             // Lista dei compositori per questa lettera
-            ...composers.map((composer) => _buildComposerTile(composer, provider)),
+            ...composers
+                .map((composer) => _buildComposerTile(composer, provider)),
           ],
         );
       },
@@ -206,13 +205,12 @@ class _ComposersScreenState extends State<ComposersScreen> {
 
   Widget _buildComposerTile(String composer, TablatureProvider provider) {
     // Conta le tablature per questo compositore
-    final tablatureCount = provider.tablatures
-        .where((t) => t.composer == composer)
-        .length;
+    final tablatureCount =
+        provider.tablatures.where((t) => t.composer == composer).length;
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
         child: Text(
           composer.isNotEmpty ? composer[0].toUpperCase() : '?',
           style: TextStyle(

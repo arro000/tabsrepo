@@ -39,12 +39,12 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
       final tablatures = provider.tablatures
           .where((t) => t.composer == widget.composer)
           .toList();
-      
+
       setState(() {
         _composerTablatures = tablatures;
         _isLoading = false;
       });
-      
+
       _sortTablatures();
     } catch (e) {
       setState(() {
@@ -62,7 +62,7 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
     setState(() {
       _composerTablatures.sort((a, b) {
         int comparison = 0;
-        
+
         switch (_sortBy) {
           case 'title':
             comparison = a.title.compareTo(b.title);
@@ -84,7 +84,7 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
             }
             break;
         }
-        
+
         return _sortAscending ? comparison : -comparison;
       });
     });
@@ -119,7 +119,8 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
                 value: 'title',
                 child: Row(
                   children: [
-                    Icon(_sortBy == 'title' ? Icons.check : Icons.sort_by_alpha),
+                    Icon(
+                        _sortBy == 'title' ? Icons.check : Icons.sort_by_alpha),
                     const SizedBox(width: 8),
                     const Text('Ordina per titolo'),
                   ],
@@ -129,7 +130,9 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
                 value: 'opus',
                 child: Row(
                   children: [
-                    Icon(_sortBy == 'opus' ? Icons.check : Icons.format_list_numbered),
+                    Icon(_sortBy == 'opus'
+                        ? Icons.check
+                        : Icons.format_list_numbered),
                     const SizedBox(width: 8),
                     const Text('Ordina per opus'),
                   ],
@@ -139,7 +142,9 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
                 value: 'difficulty',
                 child: Row(
                   children: [
-                    Icon(_sortBy == 'difficulty' ? Icons.check : Icons.star_outline),
+                    Icon(_sortBy == 'difficulty'
+                        ? Icons.check
+                        : Icons.star_outline),
                     const SizedBox(width: 8),
                     const Text('Ordina per difficoltà'),
                   ],
@@ -150,7 +155,9 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
                 value: 'toggle_order',
                 child: Row(
                   children: [
-                    Icon(_sortAscending ? Icons.arrow_upward : Icons.arrow_downward),
+                    Icon(_sortAscending
+                        ? Icons.arrow_upward
+                        : Icons.arrow_downward),
                     const SizedBox(width: 8),
                     Text(_sortAscending ? 'Crescente' : 'Decrescente'),
                   ],
@@ -200,7 +207,7 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
       children: [
         // Header con statistiche
         _buildStatsHeader(),
-        
+
         // Lista delle tablature
         Expanded(
           child: ListView.builder(
@@ -221,7 +228,7 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
 
   Widget _buildStatsHeader() {
     final stats = _calculateStats();
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -229,7 +236,7 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -264,9 +271,9 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Statistiche rapide
           Wrap(
             spacing: 12,
@@ -317,9 +324,9 @@ class _ComposerDetailScreenState extends State<ComposerDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

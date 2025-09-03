@@ -112,7 +112,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             color: Theme.of(context).cardColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -120,7 +120,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.favorite,
                 color: Colors.red,
               ),
@@ -207,15 +207,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Future<void> _clearAllFavorites() async {
     try {
       final provider = context.read<TablatureProvider>();
-      
+
       // Rimuovi tutti i preferiti
       for (final tablature in _favorites) {
         await provider.toggleFavorite(tablature);
       }
-      
+
       // Ricarica la lista
       await _loadFavorites();
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

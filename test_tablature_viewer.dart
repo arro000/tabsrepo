@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:classtab_catalog/models/tablature_content.dart';
 import 'package:classtab_catalog/widgets/enhanced_tablature_viewer.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,12 +15,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: TestScreen(),
+      home: const TestScreen(),
     );
   }
 }
 
 class TestScreen extends StatelessWidget {
+  const TestScreen({super.key});
   final String sampleContent = '''
 Questo è un esempio di tablatura per chitarra classica.
 Compositore: Johann Sebastian Bach

@@ -41,7 +41,7 @@ class TablatureContent {
       if (line.isEmpty) continue;
 
       // Controlla se la linea corrisponde a un pattern di tablatura
-      bool isTablatureLine =
+      final bool isTablatureLine =
           tablaturePatterns.any((pattern) => pattern.hasMatch(line));
 
       if (isTablatureLine) {
@@ -68,7 +68,7 @@ class TablatureContent {
         final line = lines[i].trim();
         if (line.isEmpty) continue;
 
-        bool isTablatureLine =
+        final bool isTablatureLine =
             tablaturePatterns.any((pattern) => pattern.hasMatch(line)) ||
                 (line.length > 20 &&
                     _countTablatureChars(line) > line.length * 0.3);

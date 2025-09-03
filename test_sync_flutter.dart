@@ -1,7 +1,6 @@
 #!/usr/bin/env dart
 
 import 'dart:io';
-import 'package:path/path.dart' as path;
 
 // Importa i servizi dell'app
 import 'lib/services/classtab_service.dart';
@@ -58,27 +57,26 @@ void main() async {
     print('   ✓ Parsed ${tablatures.length} tablatures');
 
     // Statistiche
-    int withContent = tablatures
-        .where((t) => t.content != null && t.content!.isNotEmpty)
-        .length;
+    int withContent = tablatures.where((t) => t.content.isNotEmpty).length;
     print('   ✓ Tablatures with content: $withContent/${tablatures.length}');
 
     // Mostra alcuni esempi
     print('\n5. Examples of parsed tablatures:');
     for (int i = 0; i < tablatures.length && i < 5; i++) {
       final tab = tablatures[i];
-      final hasContent = tab.content != null && tab.content!.isNotEmpty;
+      final hasContent = tab.content.isNotEmpty;
       print('   ${i + 1}. ${tab.composer} - ${tab.title}');
       print('      URL: ${tab.tabUrl}');
       print(
-          '      Content: ${hasContent ? 'YES (${tab.content!.length} chars)' : 'NO'}');
+          '      Content: ${hasContent ? 'YES (${tab.content.length} chars)' : 'NO'}');
     }
 
     // Test 6: Database operations (opzionale)
     print('\n6. Testing database operations...');
     try {
       final dbService = DatabaseService.instance;
-      await dbService.initDatabase();
+      // Initialize database by accessing it
+      await dbService.database;
 
       // Inserisci alcune tablature di test
       final testTabs = tablatures.take(10).toList();

@@ -21,7 +21,7 @@ class SearchFilters extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -31,8 +31,8 @@ class SearchFilters extends StatelessWidget {
               ),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  value: provider.selectedComposer.isEmpty 
-                      ? null 
+                  value: provider.selectedComposer.isEmpty
+                      ? null
                       : provider.selectedComposer,
                   hint: const Text('Tutti i compositori'),
                   isExpanded: true,
@@ -57,9 +57,9 @@ class SearchFilters extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Filtri rapidi
             const Text(
               'Filtri rapidi',
@@ -69,7 +69,7 @@ class SearchFilters extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            
+
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -124,10 +124,10 @@ class SearchFilters extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.1),
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
@@ -155,7 +155,7 @@ class SearchFilters extends StatelessWidget {
 
   void _showFilteredResults(BuildContext context, String filter) {
     final provider = context.read<TablatureProvider>();
-    
+
     // Implementa la logica di filtro specifica
     switch (filter) {
       case 'midi':
@@ -179,7 +179,7 @@ class SearchFilters extends StatelessWidget {
         // Qui dovresti implementare un filtro specifico per difficoltà
         break;
     }
-    
+
     // Mostra un messaggio o naviga a una schermata filtrata
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

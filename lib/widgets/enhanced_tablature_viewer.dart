@@ -54,9 +54,7 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
       length: sections.length,
       vsync: this,
       initialIndex: _parsedContent.hasTablature
-          ? (sections.indexOf('Tablatura') != -1
-              ? sections.indexOf('Tablatura')
-              : 0)
+          ? (sections.contains('Tablatura') ? sections.indexOf('Tablatura') : 0)
           : 0,
     );
   }
@@ -177,7 +175,7 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),

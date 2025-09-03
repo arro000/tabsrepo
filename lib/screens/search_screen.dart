@@ -34,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
               color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -55,7 +55,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     _searchController.clear();
-                                    context.read<TablatureProvider>().search('');
+                                    context
+                                        .read<TablatureProvider>()
+                                        .search('');
                                   },
                                 )
                               : null,
@@ -75,9 +77,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     const SizedBox(width: 8),
                     IconButton(
                       icon: Icon(
-                        _showFilters ? Icons.filter_list : Icons.filter_list_off,
-                        color: _showFilters 
-                            ? Theme.of(context).primaryColor 
+                        _showFilters
+                            ? Icons.filter_list
+                            : Icons.filter_list_off,
+                        color: _showFilters
+                            ? Theme.of(context).primaryColor
                             : Colors.grey,
                       ),
                       onPressed: () {
@@ -89,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ],
                 ),
-                
+
                 // Filtri
                 if (_showFilters) ...[
                   const SizedBox(height: 16),
@@ -98,7 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          
+
           // Risultati della ricerca
           Expanded(
             child: Consumer<TablatureProvider>(
@@ -115,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(
-                          provider.searchQuery.isEmpty 
+                          provider.searchQuery.isEmpty
                               ? MdiIcons.musicNote
                               : Icons.search_off,
                           size: 64,
@@ -183,7 +187,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ],
                       ),
                     ),
-                    
+
                     // Lista dei risultati
                     Expanded(
                       child: ListView.builder(
