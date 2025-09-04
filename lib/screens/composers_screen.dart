@@ -72,7 +72,7 @@ class _ComposersScreenState extends State<ComposersScreen> {
                   color: Theme.of(context).cardColor,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: Colors.black.withOpacity(0.1),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -210,7 +210,7 @@ class _ComposersScreenState extends State<ComposersScreen> {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
         child: Text(
           composer.isNotEmpty ? composer[0].toUpperCase() : '?',
           style: TextStyle(

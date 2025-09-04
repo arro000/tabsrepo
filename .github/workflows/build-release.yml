@@ -28,7 +28,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Get dependencies
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Get dependencies
@@ -100,7 +100,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Enable Linux desktop
@@ -133,7 +133,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Enable Windows desktop
@@ -168,7 +168,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Enable macOS desktop
@@ -204,7 +204,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.27.1'
           channel: 'stable'
 
       - name: Create iOS platform
