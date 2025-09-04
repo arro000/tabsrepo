@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:classtab_catalog/providers/midi_provider.dart';
-import 'package:classtab_catalog/providers/youtube_provider.dart';
 import 'package:classtab_catalog/models/tablature.dart';
+import 'package:classtab_catalog/widgets/youtube_button.dart';
 
 class MidiPlayerWidget extends StatelessWidget {
   final String midiUrl;
@@ -55,22 +55,10 @@ class MidiPlayerWidget extends StatelessWidget {
 
                   // Bottone YouTube (se tablatura disponibile)
                   if (tablature != null)
-                    Consumer<YouTubeProvider>(
-                      builder: (context, youtubeProvider, child) {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.play_circle_outline,
-                            color: youtubeProvider.hasVideo(tablature!)
-                                ? Colors.red
-                                : Colors.grey,
-                          ),
-                          onPressed: youtubeProvider.isLoading
-                              ? null
-                              : () =>
-                                  youtubeProvider.openYouTubePlayer(tablature!),
-                          tooltip: 'Apri video YouTube',
-                        );
-                      },
+                    YouTubeButton(
+                      tablature: tablature!,
+                      isCompact: true,
+                      showLabel: false,
                     ),
 
                   if (midiProvider.isLoading && isCurrentTrack)

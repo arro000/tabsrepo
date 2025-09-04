@@ -7,21 +7,27 @@ class EnhancedTablatureViewer extends StatefulWidget {
   final double initialFontSize;
   final bool showLineNumbers;
   final Function(double)? onFontSizeChanged;
+  final ScrollController? scrollController;
+  final Function(bool)? onAutoScrollStateChanged;
+  final Function(double)? onAutoScrollSpeedChanged;
 
   const EnhancedTablatureViewer({
     super.key,
     required this.content,
-    this.initialFontSize = 14.0,
+    this.initialFontSize = 8.0,
     this.showLineNumbers = false,
     this.onFontSizeChanged,
+    this.scrollController,
+    this.onAutoScrollStateChanged,
+    this.onAutoScrollSpeedChanged,
   });
 
   @override
   State<EnhancedTablatureViewer> createState() =>
-      _EnhancedTablatureViewerState();
+      EnhancedTablatureViewerState();
 }
 
-class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
+class EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
     with TickerProviderStateMixin {
   late TablatureContent _parsedContent;
   late ScrollController _scrollController;
@@ -42,7 +48,7 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
     super.initState();
     _fontSize = widget.initialFontSize;
     _parsedContent = TablatureContent.parse(widget.content);
-    _scrollController = ScrollController();
+    _scrollController = widget.scrollController ?? ScrollController();
 
     // Conta le sezioni disponibili
     final sections = <String>[];
@@ -62,7 +68,10 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
   @override
   void dispose() {
     _stopAutoScroll();
-    _scrollController.dispose();
+    // Solo disporre del controller se è stato creato internamente
+    if (widget.scrollController == null) {
+      _scrollController.dispose();
+    }
     _tabController.dispose();
     super.dispose();
   }
@@ -73,6 +82,8 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
     setState(() {
       _isAutoScrolling = true;
     });
+
+    widget.onAutoScrollStateChanged?.call(true);
 
     _autoScrollTimer =
         Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -101,6 +112,8 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
     setState(() {
       _isAutoScrolling = false;
     });
+
+    widget.onAutoScrollStateChanged?.call(false);
   }
 
   void _adjustFontSize(double delta) {
@@ -110,6 +123,22 @@ class _EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
     });
     widget.onFontSizeChanged?.call(newSize);
   }
+
+  void _adjustAutoScrollSpeed(double delta) {
+    final newSpeed = (_autoScrollSpeed + delta).clamp(0.1, 5.0);
+    setState(() {
+      _autoScrollSpeed = newSpeed;
+    });
+    widget.onAutoScrollSpeedChanged?.call(newSpeed);
+  }
+
+  // Metodi pubblici per controllo esterno
+  void startAutoScroll() => _startAutoScroll();
+  void stopAutoScroll() => _stopAutoScroll();
+  void increaseAutoScrollSpeed() => _adjustAutoScrollSpeed(0.2);
+  void decreaseAutoScrollSpeed() => _adjustAutoScrollSpeed(-0.2);
+  bool get isAutoScrolling => _isAutoScrolling;
+  double get autoScrollSpeed => _autoScrollSpeed;
 
   void _resetScroll() {
     _scrollController.animateTo(

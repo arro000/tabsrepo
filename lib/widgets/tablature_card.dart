@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:classtab_catalog/models/tablature.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
 import 'package:classtab_catalog/providers/midi_provider.dart';
-import 'package:classtab_catalog/providers/youtube_provider.dart';
 import 'package:classtab_catalog/screens/tablature_detail_screen.dart';
+import 'package:classtab_catalog/widgets/youtube_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class TablatureCard extends StatelessWidget {
@@ -72,22 +72,10 @@ class TablatureCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Pulsante YouTube
-                      Consumer<YouTubeProvider>(
-                        builder: (context, youtubeProvider, child) {
-                          return IconButton(
-                            icon: Icon(
-                              Icons.play_circle_outline,
-                              color: youtubeProvider.hasVideo(tablature)
-                                  ? Colors.red
-                                  : Colors.grey[400],
-                            ),
-                            onPressed: youtubeProvider.isLoading
-                                ? null
-                                : () => youtubeProvider
-                                    .openYouTubePlayer(tablature),
-                            tooltip: 'Apri video YouTube',
-                          );
-                        },
+                      YouTubeButton(
+                        tablature: tablature,
+                        isCompact: true,
+                        showLabel: false,
                       ),
 
                       // Pulsante MIDI
