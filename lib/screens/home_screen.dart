@@ -11,6 +11,7 @@ import 'package:classtab_catalog/widgets/statistics_card.dart';
 import 'package:classtab_catalog/widgets/floating_youtube_player.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:classtab_catalog/generated/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,9 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ClassTab Catalog'),
+        title: Text(l10n.appTitle),
         actions: [
           Consumer<TablatureProvider>(
             builder: (context, provider, child) {
@@ -70,16 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : const Icon(Icons.sync),
                 onPressed:
                     provider.isLoading ? null : () => _showSyncDialog(context),
-                tooltip: 'Sincronizza con ClassTab.org',
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                tooltip: l10n.syncWithClassTab,
               );
             },
           ),
@@ -100,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SearchScreen(),
               ComposersScreen(),
               FavoritesScreen(),
+              SettingsScreen(),
             ],
           ),
 
@@ -110,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   youtubeProvider.currentVideoId != null) {
                 return FloatingYouTubePlayer(
                   videoId: youtubeProvider.currentVideoId!,
-                  title: youtubeProvider.currentVideoTitle ?? 'Video YouTube',
+                  title: youtubeProvider.currentVideoTitle ?? l10n.youTubeVideo,
                   onClose: () => youtubeProvider.closeYouTubePlayer(),
                 );
               }
@@ -126,21 +121,25 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey,
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: l10n.home,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Cerca',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.search),
+            label: l10n.search,
           ),
           BottomNavigationBarItem(
             icon: Icon(MdiIcons.accountMusic),
-            label: 'Compositori',
+            label: l10n.composers,
           ),
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Preferiti',
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.favorite),
+            label: l10n.favorites,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: l10n.settings,
           ),
         ],
       ),
@@ -148,26 +147,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _showSyncDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Sincronizzazione'),
-          content: const Text(
-            'Vuoi sincronizzare le tablature con ClassTab.org? '
-            'Questo scaricherà tutti i dati più recenti (circa 13MB).',
-          ),
+          title: Text(l10n.synchronization),
+          content: Text(l10n.syncDialogContent),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Annulla'),
+              child: Text(l10n.cancel),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 context.read<TablatureProvider>().syncWithClassTab();
               },
-              child: const Text('Sincronizza'),
+              child: Text(l10n.sync),
             ),
           ],
         );
@@ -181,19 +179,21 @@ class _HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Consumer<TablatureProvider>(
       builder: (context, provider, child) {
         if (provider.isLoading) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SpinKitWave(
+                const SpinKitWave(
                   color: Color(0xFF8D6E63),
                   size: 50.0,
                 ),
-                SizedBox(height: 16),
-                Text('Caricamento tablature...'),
+                const SizedBox(height: 16),
+                Text(l10n.loadingTablatures),
               ],
             ),
           );
@@ -218,7 +218,7 @@ class _HomeTab extends StatelessWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => provider.loadTablatures(),
-                  child: const Text('Riprova'),
+                  child: Text(l10n.retry),
                 ),
               ],
             ),
@@ -236,21 +236,21 @@ class _HomeTab extends StatelessWidget {
                   color: Colors.grey[400],
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Nessuna tablatura trovata',
-                  style: TextStyle(fontSize: 18),
+                Text(
+                  l10n.noTablaturesFound,
+                  style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Sincronizza con ClassTab.org per scaricare le tablature',
+                Text(
+                  l10n.syncToDownloadTablatures,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () => provider.syncWithClassTab(),
                   icon: const Icon(Icons.sync),
-                  label: const Text('Sincronizza ora'),
+                  label: Text(l10n.syncNow),
                 ),
               ],
             ),
@@ -280,9 +280,9 @@ class _HomeTab extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Tablature Recenti',
-                        style: TextStyle(
+                      Text(
+                        l10n.recentTablatures,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -321,12 +321,12 @@ class _HomeTab extends StatelessWidget {
                     child: Center(
                       child: TextButton.icon(
                         onPressed: () {
-                          // Naviga alla schermata di ricerca
+                          // Navigate to search screen
                           DefaultTabController.of(context)!.animateTo(1);
                         },
                         icon: const Icon(Icons.list),
                         label: Text(
-                          'Vedi tutte le ${provider.totalCount} tablature',
+                          l10n.viewAllTablatures(provider.totalCount),
                         ),
                       ),
                     ),

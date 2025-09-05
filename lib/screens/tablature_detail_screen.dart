@@ -233,7 +233,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -391,7 +391,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
+                  color: Colors.black.withOpacity(0.2),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -463,7 +463,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           height: 40,
           decoration: BoxDecoration(
             color: isActive
-                ? Theme.of(context).primaryColor.withValues(alpha: 0.2)
+                ? Theme.of(context).primaryColor.withOpacity(0.2)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
           ),
@@ -487,9 +487,9 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        border: Border.all(color: color.withOpacity(0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -598,7 +598,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -622,7 +622,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -649,7 +649,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -705,8 +705,7 @@ class _TablatureDetailScreenState extends State<TablatureDetailScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(

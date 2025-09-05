@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
+import 'package:classtab_catalog/generated/l10n/app_localizations.dart';
 
 class SearchFilters extends StatelessWidget {
   const SearchFilters({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Consumer<TablatureProvider>(
       builder: (context, provider, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Filtro per compositore
-            const Text(
-              'Compositore',
-              style: TextStyle(
+            // Composer filter
+            Text(
+              l10n.composer,
+              style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
               ),
@@ -34,12 +37,12 @@ class SearchFilters extends StatelessWidget {
                   value: provider.selectedComposer.isEmpty
                       ? null
                       : provider.selectedComposer,
-                  hint: const Text('Tutti i compositori'),
+                  hint: Text(l10n.allComposers),
                   isExpanded: true,
                   items: [
-                    const DropdownMenuItem<String>(
+                    DropdownMenuItem<String>(
                       value: '',
-                      child: Text('Tutti i compositori'),
+                      child: Text(l10n.allComposers),
                     ),
                     ...provider.composers.map((composer) {
                       return DropdownMenuItem<String>(
@@ -60,10 +63,10 @@ class SearchFilters extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            // Filtri rapidi
-            const Text(
-              'Filtri rapidi',
-              style: TextStyle(
+            // Quick filters
+            Text(
+              l10n.quickFilters,
+              style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
               ),
@@ -76,31 +79,31 @@ class SearchFilters extends StatelessWidget {
               children: [
                 _buildFilterChip(
                   context,
-                  label: 'Con MIDI',
+                  label: l10n.withMidi,
                   icon: Icons.music_note,
                   onTap: () => _showFilteredResults(context, 'midi'),
                 ),
                 _buildFilterChip(
                   context,
-                  label: 'Con LHF',
+                  label: l10n.withLhf,
                   icon: Icons.pan_tool,
                   onTap: () => _showFilteredResults(context, 'lhf'),
                 ),
                 _buildFilterChip(
                   context,
-                  label: 'Con Video',
+                  label: l10n.withVideo,
                   icon: Icons.play_circle_outline,
                   onTap: () => _showFilteredResults(context, 'video'),
                 ),
                 _buildFilterChip(
                   context,
-                  label: 'Facili',
+                  label: l10n.easyTablatures,
                   icon: Icons.star_outline,
                   onTap: () => _showFilteredResults(context, 'easy'),
                 ),
                 _buildFilterChip(
                   context,
-                  label: 'Preferiti',
+                  label: l10n.favorites,
                   icon: Icons.favorite,
                   onTap: () => _showFavorites(context),
                 ),
@@ -124,10 +127,10 @@ class SearchFilters extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+          color: Theme.of(context).primaryColor.withOpacity(0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+            color: Theme.of(context).primaryColor.withOpacity(0.3),
           ),
         ),
         child: Row(
@@ -155,47 +158,50 @@ class SearchFilters extends StatelessWidget {
 
   void _showFilteredResults(BuildContext context, String filter) {
     final provider = context.read<TablatureProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
-    // Implementa la logica di filtro specifica
+    // Implement specific filter logic
     switch (filter) {
       case 'midi':
-        // Filtra per tablature con MIDI
+        // Filter for tablatures with MIDI
         provider.search(''); // Reset search
-        // Qui dovresti implementare un filtro specifico per MIDI
+        // Here you should implement a specific filter for MIDI
         break;
       case 'lhf':
-        // Filtra per tablature con LHF
+        // Filter for tablatures with LHF
         provider.search(''); // Reset search
-        // Qui dovresti implementare un filtro specifico per LHF
+        // Here you should implement a specific filter for LHF
         break;
       case 'video':
-        // Filtra per tablature con video
+        // Filter for tablatures with video
         provider.search(''); // Reset search
-        // Qui dovresti implementare un filtro specifico per video
+        // Here you should implement a specific filter for video
         break;
       case 'easy':
-        // Filtra per tablature facili
+        // Filter for easy tablatures
         provider.search(''); // Reset search
-        // Qui dovresti implementare un filtro specifico per difficoltà
+        // Here you should implement a specific filter for difficulty
         break;
     }
 
-    // Mostra un messaggio o naviga a una schermata filtrata
+    // Show a message or navigate to a filtered screen
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Filtro "$filter" applicato'),
+        content: Text(l10n.filterApplied(filter)),
         duration: const Duration(seconds: 2),
       ),
     );
   }
 
   void _showFavorites(BuildContext context) {
-    // Naviga alla schermata dei preferiti
-    // Questo dovrebbe essere gestito dal controller della navigazione principale
+    final l10n = AppLocalizations.of(context)!;
+
+    // Navigate to favorites screen
+    // This should be handled by the main navigation controller
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Vai alla scheda Preferiti per vedere i tuoi preferiti'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: Text(l10n.goToFavoritesTab),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

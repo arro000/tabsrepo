@@ -1,0 +1,519 @@
+{
+  "@@locale": "en",
+  "appTitle": "ClassTab Catalog",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
+  
+  "search": "Search",
+  "@search": {
+    "description": "Search tab label"
+  },
+  
+  "composers": "Composers",
+  "@composers": {
+    "description": "Composers tab label"
+  },
+  
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites tab label"
+  },
+  
+  "syncWithClassTab": "Sync with ClassTab.org",
+  "@syncWithClassTab": {
+    "description": "Tooltip for sync button"
+  },
+  
+  "synchronization": "Synchronization",
+  "@synchronization": {
+    "description": "Synchronization dialog title"
+  },
+  
+  "syncDialogContent": "Do you want to sync tablatures with ClassTab.org? This will download all the latest data (about 13MB).",
+  "@syncDialogContent": {
+    "description": "Content of synchronization dialog"
+  },
+  
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  
+  "sync": "Sync",
+  "@sync": {
+    "description": "Sync button text"
+  },
+  
+  "loadingTablatures": "Loading tablatures...",
+  "@loadingTablatures": {
+    "description": "Loading message for tablatures"
+  },
+  
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  
+  "noTablaturesFound": "No tablatures found",
+  "@noTablaturesFound": {
+    "description": "Message when no tablatures are found"
+  },
+  
+  "syncToDownloadTablatures": "Sync with ClassTab.org to download tablatures",
+  "@syncToDownloadTablatures": {
+    "description": "Message to encourage syncing"
+  },
+  
+  "syncNow": "Sync now",
+  "@syncNow": {
+    "description": "Sync now button text"
+  },
+  
+  "recentTablatures": "Recent Tablatures",
+  "@recentTablatures": {
+    "description": "Recent tablatures section title"
+  },
+  
+  "viewAllTablatures": "View all {count} tablatures",
+  "@viewAllTablatures": {
+    "description": "Button to view all tablatures",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3000"
+      }
+    }
+  },
+  
+  "youTubeVideo": "YouTube Video",
+  "@youTubeVideo": {
+    "description": "Default title for YouTube video"
+  },
+  
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+  
+  "searchTablatures": "Search tablatures...",
+  "@searchTablatures": {
+    "description": "Search hint text"
+  },
+  
+  "composer": "Composer",
+  "@composer": {
+    "description": "Composer label"
+  },
+  
+  "title": "Title",
+  "@title": {
+    "description": "Title label"
+  },
+  
+  "difficulty": "Difficulty",
+  "@difficulty": {
+    "description": "Difficulty label"
+  },
+  
+  "all": "All",
+  "@all": {
+    "description": "All filter option"
+  },
+  
+  "easy": "Easy",
+  "@easy": {
+    "description": "Easy difficulty"
+  },
+  
+  "medium": "Medium",
+  "@medium": {
+    "description": "Medium difficulty"
+  },
+  
+  "hard": "Hard",
+  "@hard": {
+    "description": "Hard difficulty"
+  },
+  
+  "expert": "Expert",
+  "@expert": {
+    "description": "Expert difficulty"
+  },
+  
+  "clearFilters": "Clear filters",
+  "@clearFilters": {
+    "description": "Clear filters button"
+  },
+  
+  "noResults": "No results found",
+  "@noResults": {
+    "description": "No search results message"
+  },
+  
+  "tryDifferentSearch": "Try a different search term or clear the filters",
+  "@tryDifferentSearch": {
+    "description": "Suggestion when no results found"
+  },
+  
+  "totalTablatures": "Total tablatures",
+  "@totalTablatures": {
+    "description": "Total tablatures statistic"
+  },
+  
+  "totalComposers": "Total composers",
+  "@totalComposers": {
+    "description": "Total composers statistic"
+  },
+  
+  "favoriteTablatures": "Favorite tablatures",
+  "@favoriteTablatures": {
+    "description": "Favorite tablatures statistic"
+  },
+  
+  "lastSync": "Last sync",
+  "@lastSync": {
+    "description": "Last sync statistic"
+  },
+  
+  "never": "Never",
+  "@never": {
+    "description": "Never synced"
+  },
+  
+  "addToFavorites": "Add to favorites",
+  "@addToFavorites": {
+    "description": "Add to favorites tooltip"
+  },
+  
+  "removeFromFavorites": "Remove from favorites",
+  "@removeFromFavorites": {
+    "description": "Remove from favorites tooltip"
+  },
+  
+  "viewTablature": "View tablature",
+  "@viewTablature": {
+    "description": "View tablature button"
+  },
+  
+  "playMidi": "Play MIDI",
+  "@playMidi": {
+    "description": "Play MIDI button"
+  },
+  
+  "watchOnYouTube": "Watch on YouTube",
+  "@watchOnYouTube": {
+    "description": "Watch on YouTube button"
+  },
+  
+  "noFavorites": "No favorites yet",
+  "@noFavorites": {
+    "description": "No favorites message"
+  },
+  
+  "addFavoritesMessage": "Add some tablatures to your favorites to see them here",
+  "@addFavoritesMessage": {
+    "description": "Message to encourage adding favorites"
+  },
+  
+  "browseTablatures": "Browse tablatures",
+  "@browseTablatures": {
+    "description": "Browse tablatures button"
+  },
+  
+  "tablaturesByComposer": "Tablatures by {composer}",
+  "@tablaturesByComposer": {
+    "description": "Tablatures by composer title",
+    "placeholders": {
+      "composer": {
+        "type": "String",
+        "example": "Bach"
+      }
+    }
+  },
+  
+  "noTablaturesForComposer": "No tablatures found for this composer",
+  "@noTablaturesForComposer": {
+    "description": "No tablatures for composer message"
+  },
+  
+  "midiSettings": "MIDI Settings",
+  "@midiSettings": {
+    "description": "MIDI settings section"
+  },
+  
+  "enableMidi": "Enable MIDI playback",
+  "@enableMidi": {
+    "description": "Enable MIDI setting"
+  },
+  
+  "midiVolume": "MIDI volume",
+  "@midiVolume": {
+    "description": "MIDI volume setting"
+  },
+  
+  "generalSettings": "General Settings",
+  "@generalSettings": {
+    "description": "General settings section"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+  
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting"
+  },
+  
+  "light": "Light",
+  "@light": {
+    "description": "Light theme"
+  },
+  
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme"
+  },
+  
+  "system": "System",
+  "@system": {
+    "description": "System theme"
+  },
+  
+  "about": "About",
+  "@about": {
+    "description": "About section"
+  },
+  
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+  
+  "aboutApp": "About the app",
+  "@aboutApp": {
+    "description": "About app button"
+  },
+  
+  "appDescription": "A Flutter application for cataloging and viewing classical guitar tablatures from ClassTab.org",
+  "@appDescription": {
+    "description": "Application description"
+  },
+  
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Generic loading message"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Generic error message"
+  },
+  
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button"
+  },
+  
+  "close": "Close",
+  "@close": {
+    "description": "Close button"
+  },
+  
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+  
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button"
+  },
+  
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button"
+  },
+  
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes button"
+  },
+  
+  "no": "No",
+  "@no": {
+    "description": "No button"
+  },
+  
+  "filters": "Filters",
+  "@filters": {
+    "description": "Filters tooltip"
+  },
+  
+  "startSearching": "Start searching for tablatures",
+  "@startSearching": {
+    "description": "Message when no search has been performed"
+  },
+  
+  "tryDifferentTerms": "Try different search terms",
+  "@tryDifferentTerms": {
+    "description": "Suggestion when no results found"
+  },
+  
+  "resultsCount": "{count} results",
+  "@resultsCount": {
+    "description": "Number of search results",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "42"
+      }
+    }
+  },
+  
+  "clearAllFilters": "Clear filters",
+  "@clearAllFilters": {
+    "description": "Clear all filters button"
+  },
+  
+  "allComposers": "All composers",
+  "@allComposers": {
+    "description": "All composers dropdown option"
+  },
+  
+  "quickFilters": "Quick filters",
+  "@quickFilters": {
+    "description": "Quick filters section title"
+  },
+  
+  "withMidi": "With MIDI",
+  "@withMidi": {
+    "description": "Filter for tablatures with MIDI"
+  },
+  
+  "withLhf": "With LHF",
+  "@withLhf": {
+    "description": "Filter for tablatures with LHF"
+  },
+  
+  "withVideo": "With Video",
+  "@withVideo": {
+    "description": "Filter for tablatures with video"
+  },
+  
+  "easyTablatures": "Easy",
+  "@easyTablatures": {
+    "description": "Filter for easy tablatures"
+  },
+  
+  "filterApplied": "Filter \"{filter}\" applied",
+  "@filterApplied": {
+    "description": "Message when filter is applied",
+    "placeholders": {
+      "filter": {
+        "type": "String",
+        "example": "MIDI"
+      }
+    }
+  },
+  
+  "goToFavoritesTab": "Go to Favorites tab to see your favorites",
+  "@goToFavoritesTab": {
+    "description": "Message to go to favorites tab"
+  },
+  
+  "errorLoadingFavorites": "Error loading favorites: {error}",
+  "@errorLoadingFavorites": {
+    "description": "Error message when loading favorites fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  
+  "favoritesCount": "{count} Favorites",
+  "@favoritesCount": {
+    "description": "Number of favorites",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  
+  "clearAll": "Clear all",
+  "@clearAll": {
+    "description": "Clear all button"
+  },
+  
+  "removeAllFavorites": "Remove all favorites",
+  "@removeAllFavorites": {
+    "description": "Remove all favorites dialog title"
+  },
+  
+  "removeAllFavoritesConfirm": "Are you sure you want to remove all tablatures from favorites? This action cannot be undone.",
+  "@removeAllFavoritesConfirm": {
+    "description": "Confirmation message for removing all favorites"
+  },
+  
+  "removeAll": "Remove all",
+  "@removeAll": {
+    "description": "Remove all button"
+  },
+  
+  "allFavoritesRemoved": "All favorites have been removed",
+  "@allFavoritesRemoved": {
+    "description": "Message when all favorites are removed"
+  },
+  
+  "errorRemovingFavorites": "Error removing favorites: {error}",
+  "@errorRemovingFavorites": {
+    "description": "Error message when removing favorites fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Database error"
+      }
+    }
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language settings section title"
+  },
+  
+  "appInfo": "App Information",
+  "@appInfo": {
+    "description": "App information section title"
+  },
+  
+  "appName": "App Name",
+  "@appName": {
+    "description": "App name label"
+  },
+  
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+  
+  "developer": "Developer",
+  "@developer": {
+    "description": "Developer label"
+  },
+  
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings tab title"
+  }
+}

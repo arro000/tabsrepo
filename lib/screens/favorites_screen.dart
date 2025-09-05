@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:classtab_catalog/providers/tablature_provider.dart';
 import 'package:classtab_catalog/widgets/tablature_card.dart';
 import 'package:classtab_catalog/models/tablature.dart';
+import 'package:classtab_catalog/generated/l10n/app_localizations.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -37,8 +38,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         _isLoading = false;
       });
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Errore nel caricamento dei preferiti: $e')),
+          SnackBar(content: Text(l10n.errorLoadingFavorites(e.toString()))),
         );
       }
     }
@@ -55,6 +57,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Widget _buildBody() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -72,16 +76,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               color: Colors.grey[400],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Nessun preferito',
-              style: TextStyle(
+            Text(
+              l10n.noFavorites,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Aggiungi tablature ai preferiti per vederle qui',
+              l10n.addFavoritesMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.grey[600],
@@ -91,11 +95,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () {
-                // Naviga alla schermata di ricerca
+                // Navigate to search screen
                 DefaultTabController.of(context)!.animateTo(1);
               },
               icon: const Icon(Icons.search),
-              label: const Text('Esplora tablature'),
+              label: Text(l10n.browseTablatures),
             ),
           ],
         ),
@@ -104,7 +108,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     return Column(
       children: [
-        // Header con statistiche
+        // Header with statistics
         Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -112,7 +116,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             color: Theme.of(context).cardColor,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -126,7 +130,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                '${_favorites.length} Preferiti',
+                l10n.favoritesCount(_favorites.length),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -137,7 +141,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 TextButton.icon(
                   onPressed: _showClearDialog,
                   icon: const Icon(Icons.clear_all, size: 16),
-                  label: const Text('Pulisci tutto'),
+                  label: Text(l10n.clearAll),
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.red,
                   ),
@@ -146,7 +150,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
         ),
 
-        // Lista dei preferiti
+        // Favorites list
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -159,7 +163,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   builder: (context, provider, child) {
                     return TablatureCard(
                       tablature: tablature,
-                      // Aggiorna la lista quando i preferiti cambiano
+                      // Update list when favorites change
                       key: ValueKey('${tablature.id}_${tablature.isFavorite}'),
                     );
                   },
@@ -173,19 +177,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   void _showClearDialog() {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Rimuovi tutti i preferiti'),
-          content: const Text(
-            'Sei sicuro di voler rimuovere tutte le tablature dai preferiti? '
-            'Questa azione non può essere annullata.',
-          ),
+          title: Text(l10n.removeAllFavorites),
+          content: Text(l10n.removeAllFavoritesConfirm),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Annulla'),
+              child: Text(l10n.cancel),
             ),
             ElevatedButton(
               onPressed: () {
@@ -196,7 +199,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Rimuovi tutto'),
+              child: Text(l10n.removeAll),
             ),
           ],
         );
@@ -205,21 +208,23 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _clearAllFavorites() async {
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       final provider = context.read<TablatureProvider>();
 
-      // Rimuovi tutti i preferiti
+      // Remove all favorites
       for (final tablature in _favorites) {
         await provider.toggleFavorite(tablature);
       }
 
-      // Ricarica la lista
+      // Reload the list
       await _loadFavorites();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tutti i preferiti sono stati rimossi'),
+          SnackBar(
+            content: Text(l10n.allFavoritesRemoved),
           ),
         );
       }
@@ -227,7 +232,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Errore nella rimozione dei preferiti: $e'),
+            content: Text(l10n.errorRemovingFavorites(e.toString())),
             backgroundColor: Colors.red,
           ),
         );

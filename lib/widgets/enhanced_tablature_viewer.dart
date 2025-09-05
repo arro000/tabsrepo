@@ -204,7 +204,7 @@ class EnhancedTablatureViewerState extends State<EnhancedTablatureViewer>
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 2,
             offset: const Offset(0, 1),
           ),

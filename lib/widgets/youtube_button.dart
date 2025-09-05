@@ -90,7 +90,7 @@ class YouTubeButton extends StatelessWidget {
                                   ? 'Video disponibile'
                                   : 'Cerca video per questa tablatura',
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.9),
+                                color: Colors.white.withOpacity(0.9),
                                 fontSize: 12,
                               ),
                             ),
