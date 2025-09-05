@@ -37,6 +37,18 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Validate Android configuration
+        run: |
+          echo "Checking Android configuration..."
+          echo "Flutter version: $(flutter --version | head -n1)"
+          echo "Java version: $(java -version 2>&1 | head -n1)"
+          echo "Gradle wrapper version:"
+          cat android/gradle/wrapper/gradle-wrapper.properties | grep distributionUrl
+          echo "Android Gradle Plugin version:"
+          grep "com.android.tools.build:gradle" android/build.gradle
+          echo "Kotlin version:"
+          grep "kotlin_version" android/build.gradle
+
       - name: Setup Gradle properties for CI
         run: |
           echo "org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> android/gradle.properties
