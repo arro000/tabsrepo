@@ -28,7 +28,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Get dependencies
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Get dependencies
@@ -100,7 +100,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Enable Linux desktop
@@ -133,7 +133,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Enable Windows desktop
@@ -168,7 +168,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Enable macOS desktop
@@ -204,7 +204,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'
+          flutter-version: '3.29.2'
           channel: 'stable'
 
       - name: Create iOS platform
@@ -250,12 +250,12 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.VERSION }}
-          release_name: ClassTab Catalog ${{ steps.version.outputs.VERSION }}
+          name: ClassTab Catalog ${{ steps.version.outputs.VERSION }}
           body: |
             ## ClassTab Catalog ${{ steps.version.outputs.VERSION }}
             
@@ -299,73 +299,11 @@ jobs:
             For support and bug reports, please visit our [GitHub Issues](https://github.com/your-username/classtab-catalog/issues) page.
           draft: false
           prerelease: false
-
-      - name: Upload Android APK
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./android-apk/app-release.apk
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-android.apk
-          asset_content_type: application/vnd.android.package-archive
-
-      - name: Upload Android AAB
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./android-aab/app-release.aab
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-android.aab
-          asset_content_type: application/octet-stream
-
-      - name: Upload Web Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./web-build/web-build.tar.gz
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-web.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Windows Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./windows-build/windows-build.zip
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-windows.zip
-          asset_content_type: application/zip
-
-      - name: Upload macOS Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./macos-build/macos-build.tar.gz
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-macos.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Linux Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./linux-build/linux-build.tar.gz
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-linux.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload iOS Build
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./ios-build/ios-build.tar.gz
-          asset_name: ClassTab-Catalog-${{ steps.version.outputs.VERSION }}-ios.tar.gz
-          asset_content_type: application/gzip
+          files: |
+            ./android-apk/app-release.apk
+            ./android-aab/app-release.aab
+            ./web-build/web-build.tar.gz
+            ./windows-build/windows-build.zip
+            ./macos-build/macos-build.tar.gz
+            ./linux-build/linux-build.tar.gz
+            ./ios-build/ios-build.tar.gz
