@@ -37,6 +37,12 @@ jobs:
       - name: Run tests
         run: flutter test
 
+      - name: Setup Gradle properties for CI
+        run: |
+          echo "org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" >> android/gradle.properties
+          echo "org.gradle.parallel=false" >> android/gradle.properties
+          echo "org.gradle.daemon=false" >> android/gradle.properties
+
       - name: Build APK
         run: flutter build apk --release
 
@@ -65,7 +71,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'
+          flutter-version: '3.35.3'
           channel: 'stable'
 
       - name: Get dependencies
@@ -100,7 +106,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'
+          flutter-version: '3.35.3'
           channel: 'stable'
 
       - name: Enable Linux desktop
@@ -133,7 +139,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'
+          flutter-version: '3.35.3'
           channel: 'stable'
 
       - name: Enable Windows desktop
@@ -168,7 +174,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'
+          flutter-version: '3.35.3'
           channel: 'stable'
 
       - name: Enable macOS desktop
@@ -204,7 +210,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'
+          flutter-version: '3.35.3'
           channel: 'stable'
 
       - name: Create iOS platform
