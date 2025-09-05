@@ -34,17 +34,17 @@ dependencies:
   shared_preferences: ^2.2.2
   
   # File handling
-  archive: ^3.4.9
+  archive: ^4.0.7
   path: ^1.8.3
   
   # MIDI playback
-  flutter_midi_command: ^0.4.15
+  flutter_midi_command: ^0.5.3
   
   # State management
   provider: ^6.1.1
   
   # Search functionality
-  flutter_typeahead: ^4.8.0
+  flutter_typeahead: ^5.2.0
   
   # Loading indicators
   flutter_spinkit: ^5.2.0
@@ -58,7 +58,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
